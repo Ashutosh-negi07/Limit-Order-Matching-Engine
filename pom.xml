@@ -44,10 +44,10 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- Flyway core starter (wires Flyway into Spring Boot autoconfiguration) -->
+		<!-- Flyway core — Spring Boot auto-configures it, version managed by parent BOM -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-flyway</artifactId>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
 		</dependency>
 		<!-- PostgreSQL-specific Flyway dialect (required since Flyway 10 modularization) -->
 		<dependency>
