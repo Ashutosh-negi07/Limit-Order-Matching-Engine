@@ -109,6 +109,17 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!-- Give the forked test JVM enough heap — default is too small -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- Pin forked test JVM to the same Java running Maven (Java 21) -->
+					<!-- Without this, Surefire picks up Java 26 from system PATH    -->
+					<jvm>${java.home}/bin/java</jvm>
+					<argLine>-Xmx512m -Xms128m</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
