@@ -13,6 +13,9 @@ import com.project.exchange.repository.TradeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -34,5 +37,13 @@ public class OrderService {
             tradeRepository.save(trade);
         }
 
+    }
+    public Order getOrderById(UUID id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+    }
+
+    public List<Trade> getAllTrades() {
+        return tradeRepository.findAll();
     }
 }
