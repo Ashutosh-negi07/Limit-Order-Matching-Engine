@@ -17,7 +17,7 @@ public class OrderBook {
     }
 
     public void removeOrder(Order order){
-        if(order.getSide()== OrderSide.SELL){
+        if(order.getSide()== OrderSide.BUY){
             buyBook.remove(order);
         }else{sellBook.remove(order);}
     }
