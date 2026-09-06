@@ -2,9 +2,11 @@ package com.project.exchange.matching;
 
 import com.project.exchange.domain.Order;
 import com.project.exchange.domain.OrderSide;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 public class OrderBook {
 
     private PriorityQueue<Order> buyBook = new PriorityQueue<>(new BuyOrderComparator());

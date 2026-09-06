@@ -4,12 +4,14 @@ import com.project.exchange.domain.Order;
 import com.project.exchange.domain.OrderSide;
 import com.project.exchange.domain.OrderStatus;
 import com.project.exchange.domain.Trade;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Component
 public class MatchingEngine {
 
 
