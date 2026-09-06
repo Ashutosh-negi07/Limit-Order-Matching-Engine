@@ -1,6 +1,7 @@
-package com.project.exchange.dto;
+package com.project.exchange.mapper;
 
 import com.project.exchange.domain.Trade;
+import com.project.exchange.dto.TradeResponse;
 
 public class TradeMapper {
 

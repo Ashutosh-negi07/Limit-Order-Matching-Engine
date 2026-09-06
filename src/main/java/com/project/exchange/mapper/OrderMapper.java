@@ -1,8 +1,10 @@
-package com.project.exchange.dto;
+package com.project.exchange.mapper;
 
 
 import com.project.exchange.domain.Order;
 import com.project.exchange.domain.OrderStatus;
+import com.project.exchange.dto.OrderResponse;
+import com.project.exchange.dto.PlaceOrderRequest;
 
 import java.time.Instant;
 
