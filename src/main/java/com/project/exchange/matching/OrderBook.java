@@ -18,10 +18,15 @@ public class OrderBook {
         }else{sellBook.add(order);}
     }
 
-    public void removeOrder(Order order){
-        if(order.getSide()== OrderSide.BUY){
-            buyBook.remove(order);
-        }else{sellBook.remove(order);}
+    public boolean removeOrderById(UUID orderId, OrderSide side){
+        if (side == OrderSide.BUY) {
+            return buyBook.removeIf(order -> Objects.equals(order.getId(), orderId));
+        }
+        if (side == OrderSide.SELL) {
+            return sellBook.removeIf(order -> Objects.equals(order.getId(), orderId));
+        }
+        return false;
+
     }
 
     public Order getBestBuy(){
@@ -33,11 +38,15 @@ public class OrderBook {
     }
 
     public List<Order> getBuyOrders(){
-        return  new ArrayList<>(buyBook);
+        List<Order> list = new ArrayList<>(buyBook);
+        list.sort(new BuyOrderComparator());
+        return list;
     }
 
     public List<Order> getSellOrders(){
-        return  new ArrayList<>(sellBook);
+        List<Order> list = new ArrayList<>(sellBook);
+        list.sort(new SellOrderComparator());
+        return list;
     }
 
 

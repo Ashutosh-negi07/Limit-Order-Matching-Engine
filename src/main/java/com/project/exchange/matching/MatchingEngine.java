@@ -59,6 +59,7 @@ public class MatchingEngine {
                      incomingOrder.getRemainingQuantity(),
                      bestOppositeOrder.getRemainingQuantity());
 
+             Instant executedTime = Instant.now();
              // Step 6: build trade — execution price is the resting order's price
              Trade trade = Trade.builder()
                      .executionPrice(bestOppositeOrder.getLimitPrice())
@@ -66,17 +67,24 @@ public class MatchingEngine {
                      .buyOrderId(buyOrderId)
                      .sellOrderId(sellOrderId)
                      .instrument("ACME")
-                     .executedAt(Instant.now())
+                     .executedAt(executedTime)
                      .build();
 
              // Step 7: update quantities
+
              incomingOrder.setRemainingQuantity(incomingOrder.getRemainingQuantity() - matchedQty);
+             incomingOrder.setUpdatedAt(executedTime);
              bestOppositeOrder.setRemainingQuantity(bestOppositeOrder.getRemainingQuantity() - matchedQty);
+             bestOppositeOrder.setUpdatedAt(executedTime);
 
              // Step 8: update opposite order status and remove if fully filled
              if (bestOppositeOrder.getRemainingQuantity() == 0) {
                  bestOppositeOrder.setStatus(OrderStatus.FILLED);
-                 orderBook.removeOrder(bestOppositeOrder);
+                 boolean removed = orderBook.removeOrderById(
+                         bestOppositeOrder.getId(), bestOppositeOrder.getSide());
+                 if (!removed) {
+                     throw new IllegalStateException("Matched order was not present in the order book");
+                 }
              } else {
                  bestOppositeOrder.setStatus(OrderStatus.PARTIALLY_FILLED);
              }

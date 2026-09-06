@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -33,6 +34,9 @@ public class OrderService {
     public void processOrder(Order incomingOrder){
         lock.lock();
         try {
+            if (incomingOrder.getSequenceNumber() == null) {
+                incomingOrder.setSequenceNumber(orderRepository.getNextSequenceNumber());
+            }
             orderRepository.save(incomingOrder);
             MatchResult matchResult = matchingEngine.match(incomingOrder, orderBook);
             orderRepository.save(matchResult.getUpdatedIncomingOrder());
@@ -58,9 +62,13 @@ public class OrderService {
             if (order.getStatus() == OrderStatus.FILLED || order.getStatus() == OrderStatus.CANCELLED) {
                 throw new IllegalStateException("Cannot cancel order with status: " + order.getStatus());
             }
-            orderBook.removeOrder(order);
+            boolean removed = orderBook.removeOrderById(order.getId(), order.getSide());
+            if (!removed) {
+                throw new IllegalStateException("Order was not present in the order book");
+            }
 
             order.setStatus(OrderStatus.CANCELLED);
+            order.setUpdatedAt(Instant.now());
             orderRepository.save(order);
             return order;
         }

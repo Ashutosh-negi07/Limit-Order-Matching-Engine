@@ -18,13 +18,10 @@ public class BuyOrderComparator implements Comparator<Order> {
             return 1;
         }
 
-        int timeComparison =
-                o1.getCreatedAt().compareTo(o2.getCreatedAt());
-
-        if (timeComparison < 0) {
-            return -1; // earlier order first
-        } else if (timeComparison > 0) {
-            return 1;
+        if (o1.getSequenceNumber() != null && o2.getSequenceNumber() != null) {
+            return o1.getSequenceNumber().compareTo(o2.getSequenceNumber());
+        } else if (o1.getCreatedAt() != null && o2.getCreatedAt() != null) {
+            return o1.getCreatedAt().compareTo(o2.getCreatedAt());
         } else {
             return 0;
         }

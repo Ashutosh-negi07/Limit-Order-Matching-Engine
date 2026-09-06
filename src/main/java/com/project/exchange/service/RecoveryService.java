@@ -24,7 +24,8 @@ public class RecoveryService {
     public void recover(){
         log.info("Starting OrderBook recovery from database...");
         List<OrderStatus> activeStatuses =  List.of(OrderStatus.OPEN, OrderStatus.PARTIALLY_FILLED);
-        List<Order> activeOrders = orderRepository.findByStatusInOrderByCreatedAtAsc(activeStatuses);
+        List<Order> activeOrders =
+                orderRepository.findByStatusInOrderBySequenceNumberAsc(activeStatuses);
         for (Order order : activeOrders) {
             orderBook.addOrder(order);
         }

@@ -21,7 +21,6 @@ public class OrderMapper {
                 .status(OrderStatus.OPEN)
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
-                .sequenceNumber(request.getSequenceNumber())
                 .build();
     }
     public static OrderResponse toResponseDTO(Order order){
