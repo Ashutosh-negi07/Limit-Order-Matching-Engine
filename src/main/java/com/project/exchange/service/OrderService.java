@@ -12,6 +12,7 @@ import com.project.exchange.repository.OrderRepository;
 import com.project.exchange.repository.TradeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,6 +29,7 @@ public class OrderService {
     private final OrderBook orderBook;
     private final ReentrantLock lock = new ReentrantLock();
 
+    @Transactional
     public void processOrder(Order incomingOrder){
         lock.lock();
         try {
@@ -46,6 +48,7 @@ public class OrderService {
 
     }
 
+    @Transactional
     public Order cancelOrder(UUID id){
         lock.lock();
         try{
