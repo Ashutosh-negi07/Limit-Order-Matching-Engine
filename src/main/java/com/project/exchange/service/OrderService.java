@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 @RequiredArgsConstructor
@@ -24,17 +25,22 @@ public class OrderService {
     private final TradeRepository tradeRepository;
     private final MatchingEngine matchingEngine;
     private final OrderBook orderBook;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public void processOrder(Order incomingOrder){
-
-        orderRepository.save(incomingOrder);
-        MatchResult matchResult = matchingEngine.match(incomingOrder, orderBook);
-        orderRepository.save(matchResult.getUpdatedIncomingOrder());
-        for(Order order:matchResult.getUpdatedOppositeOrders()){
-            orderRepository.save(order);
-        }
-        for(Trade trade:matchResult.getCreatedTrades()){
-            tradeRepository.save(trade);
+        lock.lock();
+        try {
+            orderRepository.save(incomingOrder);
+            MatchResult matchResult = matchingEngine.match(incomingOrder, orderBook);
+            orderRepository.save(matchResult.getUpdatedIncomingOrder());
+            for (Order order : matchResult.getUpdatedOppositeOrders()) {
+                orderRepository.save(order);
+            }
+            for (Trade trade : matchResult.getCreatedTrades()) {
+                tradeRepository.save(trade);
+            }
+        }finally{
+            lock.unlock();
         }
 
     }

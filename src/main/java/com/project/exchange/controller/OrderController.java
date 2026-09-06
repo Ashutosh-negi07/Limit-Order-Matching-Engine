@@ -4,8 +4,8 @@ import com.project.exchange.domain.Order;
 import com.project.exchange.dto.OrderMapper;
 import com.project.exchange.dto.OrderResponse;
 import com.project.exchange.dto.PlaceOrderRequest;
-import com.project.exchange.repository.OrderRepository;
 import com.project.exchange.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class OrderController {
 
 
     @PostMapping()
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody PlaceOrderRequest request){
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody PlaceOrderRequest request){
         Order order = OrderMapper.toOrderEntity(request);
 
         orderService.processOrder(order);
