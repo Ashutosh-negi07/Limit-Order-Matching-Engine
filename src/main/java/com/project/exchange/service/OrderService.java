@@ -64,7 +64,7 @@ public class OrderService {
         finally{lock.unlock();}
     }
 
-    
+
     public Order getOrderById(UUID id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Order not found with id: " + id));
@@ -73,4 +73,9 @@ public class OrderService {
     public List<Trade> getAllTrades() {
         return tradeRepository.findAll();
     }
+
+    public OrderBook getOrderBook() {
+        return orderBook;
+    }
+
 }

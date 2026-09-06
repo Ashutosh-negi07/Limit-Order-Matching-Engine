@@ -1,6 +1,6 @@
 package com.project.exchange.controller;
 
-import com.project.exchange.dto.TradeMapper;
+import com.project.exchange.mapper.TradeMapper;
 import com.project.exchange.dto.TradeResponse;
 import com.project.exchange.service.OrderService;
 import lombok.RequiredArgsConstructor;
