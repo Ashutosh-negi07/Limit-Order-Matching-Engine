@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -44,9 +45,29 @@ public class OrderService {
         }
 
     }
+
+    public Order cancelOrder(UUID id){
+        lock.lock();
+        try{
+            Order order = orderRepository.findById(id)
+                    .orElseThrow(()->new NoSuchElementException("Order not found with id: " + id));
+
+            if (order.getStatus() == OrderStatus.FILLED || order.getStatus() == OrderStatus.CANCELLED) {
+                throw new IllegalStateException("Cannot cancel order with status: " + order.getStatus());
+            }
+            orderBook.removeOrder(order);
+
+            order.setStatus(OrderStatus.CANCELLED);
+            orderRepository.save(order);
+            return order;
+        }
+        finally{lock.unlock();}
+    }
+
+    
     public Order getOrderById(UUID id) {
         return orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Order not found with id: " + id));
     }
 
     public List<Trade> getAllTrades() {
